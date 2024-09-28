@@ -29,7 +29,7 @@ function App() {
   <div className="App">
 
       <header className="App-header">
-        {/* <img src={logo} className="App-logo" alt="logo" />
+        <img src={logo} className="App-logo" alt="logo" />
         <p>
           {/* Edit <code>src/App.js</code> and save to reload. */}
           Hello world
@@ -41,7 +41,7 @@ function App() {
           rel="noopener noreferrer"
         >
           Learn react
-        </a> */}
+        </a>
    
         <Animated.div style={{ backgroundColor: bgColor, padding: '10px', marginTop: '20px' }}>
           Highlighted Text
