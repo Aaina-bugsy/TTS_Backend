@@ -93,7 +93,7 @@ const convertTextToSpeechModule = async (request) => {
                     output_file_name: outputFileName
                 }
             ],
-            url: `./output/${outputFileName}`
+            url: `/output/${outputFileName}`
         }
         
 
