@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ limit: "300mb", extended: true }))
 // Array Of Cors (Domains)
 app.use(
     cors({
-        origin: process.env.CORS_DOMAIN.split(","),
+        origin: "*",
         methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD", "DELETE"],
         credentials: true
     })

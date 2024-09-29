@@ -5,24 +5,27 @@ const path = require('path');
 const LibFunction = require("../../../helpers/libFunction")
 const googleApi = require("./../../../helpers/googleApi");
 const { url } = require("inspector");
+const { clouddebugger } = require("googleapis/build/src/apis/clouddebugger");
 
-const convertTextToSpeechModule = async (req) => {
+const convertTextToSpeechModule = async (request) => {
     try {
-
+        // console.log(req);
+        const req = request.body;
         let inputType = req.input_type ? req.input_type : null
-        let text = req.text ? req.text : null
+        let text = req?.text ? req?.text : null
         let url = req.url ? req.url : null
-        let file = req.file ? req.file : null
+        let file = request.file ? request.file : null
         let languageCode = req.language_code ? req.language_code : 'en-GB'
         let voiceType = req.voice_type ? req.voice_type.toUpperCase() : 'MALE'
         let speakingRate = req.speaking_rate ? req.speaking_rate : 1
         let pitch = req.pitch ? req.pitch : 1
         let voiceName = req.voice_name ? req.voice_name : 'en-GB-Wavenet-B'
 
-        console.log(req.text)
+        console.log(req?.text)
 
         const currentTimestamp = await LibFunction.formateDateLib()
 
+        console.log(inputType)
         if(!inputType) {
             return {
                 status: false,
@@ -40,8 +43,8 @@ const convertTextToSpeechModule = async (req) => {
                     error: "ERROR! Please provide the file"
                 }
             }
-            const extractText = await googleApi.extractTextFromPDF(file)
-            if(extractText.status) {
+            const extractText = await googleApi.extractTextFromPDF(file.path)
+            if(!extractText.status) {
                 return extractText
             }
 
@@ -55,7 +58,6 @@ const convertTextToSpeechModule = async (req) => {
             }
 
             const extractText = await googleApi.extractTextFromURL(url)
-            console.log("in url")
             console.log(extractText)
             if(!extractText.status) {
                 return extractText
@@ -77,7 +79,8 @@ const convertTextToSpeechModule = async (req) => {
             }
         }
 
-        console.log(text, languageCode, voiceType, speakingRate, pitch, voiceName, outputFileName)
+        console.log(text)
+        // console.log(text, languageCode, voiceType, speakingRate, pitch, voiceName, outputFileName)
         const convertTextToSpeechFile = await googleApi.convertTextToSpeech(text, languageCode, voiceType, speakingRate, pitch, voiceName, outputFileName)
         if(!convertTextToSpeechFile.status) {
             return convertTextToSpeechFile
@@ -89,7 +92,8 @@ const convertTextToSpeechModule = async (req) => {
                 {
                     output_file_name: outputFileName
                 }
-            ]
+            ],
+            url: `./output/${outputFileName}`
         }
         
 

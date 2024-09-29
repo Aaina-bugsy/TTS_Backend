@@ -46,7 +46,10 @@ async function getTextToSpeechLanguagesAndVoices() {
             Voices: languageMap[language].join(", "),
         }));
 
-        res.json(formattedResponse);
+        return {
+            status: true,
+            data: formattedResponse
+        }
 
     } catch (error) {
         console.error('Error fetching voices:', error);
@@ -55,6 +58,7 @@ async function getTextToSpeechLanguagesAndVoices() {
 
 // Function to convert text to speech
 async function convertTextToSpeech(text, languageCode, voiceType, speakingRate, pitch, voiceName, outputFileName) {
+    console.log("inside convert")
     const request = {
         input: { text: text },
         voice: {
@@ -69,6 +73,8 @@ async function convertTextToSpeech(text, languageCode, voiceType, speakingRate, 
         }
     };
 
+    console.log(request)
+
     // Perform the Text-to-Speech request
     const [response] = await client.synthesizeSpeech(request);
     if(!response || !response?.audioContent) {
@@ -78,7 +84,8 @@ async function convertTextToSpeech(text, languageCode, voiceType, speakingRate, 
         }
     }
 
-    // console.log(response)
+    console.log("1")
+    console.log(response)
 
     const outputFilePath = path.join(__dirname, "../public/output", outputFileName);
 
@@ -89,6 +96,7 @@ async function convertTextToSpeech(text, languageCode, voiceType, speakingRate, 
     }
 
 
+    console.log("2")
     console.log(response.audioContent)
     await fs.writeFile(outputFilePath, response.audioContent, (err) => {
         if (err) {
@@ -110,8 +118,15 @@ async function convertTextToSpeech(text, languageCode, voiceType, speakingRate, 
 // Function to handle PDF file and extract text
 async function extractTextFromPDF(pdfFilePath) {
     try {
-        const dataBuffer = fs.readFileSync(pdfFilePath);
+        // console.log("extractTextFromPDF")
+        // console.log(pdfFilePath)
+        // console.log(path.resolve(__dirname,pdfFilePath))
+        const dataBuffer = fs.readFileSync(pdfFilePath); //fs.readFileSync(pdfFilePath);
+        // console.log(dataBuffer)
+
         const pdfData = await pdfParse(dataBuffer);
+        // console.log(pdfData)
+
         return {
             status: true,
             data: pdfData.text
@@ -152,6 +167,7 @@ async function extractTextFromURL(url) {
 module.exports = {
     getTextToSpeechLanguagesAndVoices: getTextToSpeechLanguagesAndVoices,
     convertTextToSpeech: convertTextToSpeech,
-    extractTextFromPDF: extractTextFromPDF,
+    extractTextFromPDF: 
+    extractTextFromPDF,
     extractTextFromURL: extractTextFromURL
 };
